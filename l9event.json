@@ -3,6 +3,7 @@
   "event_source": "DotEnvConfigPlugin",
   "event_pipeline": ["ip4scout", "l9tcpid", "l9explore", "DotEnvConfigPlugin"],
   "ip": "127.0.0.1",
+  "host": "site1.example.com",
   "port": "8080",
   "transport": ["tcp","tls","http"],
   "protocol": "https",
