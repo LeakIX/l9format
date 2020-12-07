@@ -1,0 +1,45 @@
+{
+  "event_type": "leak",
+  "event_source": ["ip4scout", "l9tcpid", "l9explore", "DotEnvConfigPlugin"],
+  "host": "website.example.com",
+  "ip": "127.0.0.1",
+  "port": "8080",
+  "transport": ["tcp","tls","http"],
+  "protocol": "https",
+  "http": {
+    "root": "/path1",
+    "status": 200,
+    "url": "/path1/.env",
+    "length": 2004,
+    "headers": {
+      "Server": "Apache"
+    }
+  },
+  "ssl" : {
+    "enabled": true,
+    "jarm": "05d10d20d21d20d05c05d10d05d20da23a7a927f270a23608b3c7a72999cab",
+    "certificate" : {
+      "cn": "*.example.com",
+      "domains" : ["*.example.net"]
+    }
+  },
+  "leak": {
+    "summary": "Index xy , index z ,ectt",
+    "date": "2020-10-09 11:12:12.123",
+    "severity": "high",
+    "plugin": "ElasticsearchExplore",
+    "dataset": {
+      "rows": 0,
+      "files": 0,
+      "size" : 0,
+      "collections": 0,
+      "infected": true
+    }
+  },
+  "service" : {
+    "software": {
+      "name": "Elasticsearch",
+      "version": "1.4.4"
+    }
+  }
+}
