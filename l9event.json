@@ -1,6 +1,7 @@
 {
   "event_type": "leak",
-  "event_source": ["ip4scout", "l9tcpid", "l9explore", "DotEnvConfigPlugin"],
+  "event_source":"DotEnvConfigPlugin",
+  "event_pipeline": ["ip4scout", "l9tcpid", "l9explore", "DotEnvConfigPlugin"],
   "host": "website.example.com",
   "ip": "127.0.0.1",
   "port": "8080",
