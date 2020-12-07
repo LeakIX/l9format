@@ -8,9 +8,18 @@ import (
 
 func main() {
 	event := &l9format.L9Event{}
-	event.Service.Software.Modules = append(event.Service.Software.Modules, l9format.SoftwareModule{})
+	// load current schema for extension :
+	currentSchemaFile, err := os.Open("l9event.json")
+	if err != nil {
+		panic(err)
+	}
+	decoder := json.NewDecoder(currentSchemaFile)
+	err = decoder.Decode(event)
+	if err != nil {
+		panic(err)
+	}
 	encoder := json.NewEncoder(os.Stdout)
-	err := encoder.Encode(event)
+	err = encoder.Encode(event)
 	if err != nil {
 		panic(err)
 	}

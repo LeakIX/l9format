@@ -16,6 +16,7 @@ type L9Event struct {
 	Time		time.Time `json:"time"`
 	SSL         L9SSLEvent `json:"ssl"`
 	Service     L9ServiceEvent `json:"service"`
+	Leak		L9LeakEvent	   `json:"leak"`
 }
 
 type L9HttpEvent struct {
