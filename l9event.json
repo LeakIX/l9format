@@ -1,46 +1,60 @@
 {
   "event_type": "leak",
-  "event_source":"DotEnvConfigPlugin",
+  "event_source": "DotEnvConfigPlugin",
   "event_pipeline": ["ip4scout", "l9tcpid", "l9explore", "DotEnvConfigPlugin"],
-  "host": "website.example.com",
   "ip": "127.0.0.1",
   "port": "8080",
   "transport": ["tcp","tls","http"],
   "protocol": "https",
   "http": {
-    "root": "/path1",
+    "root": "/site1",
+    "url": "/site1/.env",
     "status": 200,
-    "url": "/path1/.env",
-    "length": 2004,
+    "length": 12423,
     "header": {
-      "Server": "Apache"
+      "Server": "Apache",
+      "Content-Type": "application/text"
     }
   },
-  "ssl" : {
+  "summary": "Env config file found:\n\n XYZ=\n",
+  "time": "0001-01-01T00:00:00Z",
+  "ssl": {
     "enabled": true,
-    "jarm": "05d10d20d21d20d05c05d10d05d20da23a7a927f270a23608b3c7a72999cab",
-    "certificate" : {
-      "cn": "*.example.com",
-      "domain" : ["*.example.net"]
+    "jarm": "29d29d00029d29d21c41d41d00041dba71dd2df645850cf5f0b5af18a5fdcf",
+    "cypher_suite": "TLS_AES_128_GCM_SHA256",
+    "version": "TLSv1.3",
+    "certificate": {
+      "cn": "example.com",
+      "domain": ["site.example.com", "admin.example.com"],
+      "fingerprint": "e998e371dd4678c9113e196bc5e4a5e901455750c6dbc9985c84403b91055260",
+      "key_algo": "RSA",
+      "key_size": 2048,
+      "issuer_name": "Rapid SSL",
+      "not_before": "0001-01-01T00:00:00Z",
+      "not_after": "0001-01-01T00:00:00Z",
+      "valid": false
     }
   },
-  "leak": {
-    "summary": "Index xy , index z ,ectt",
-    "date": "2020-10-09 11:12:12.123",
-    "severity": "high",
-    "plugin": "ElasticsearchExplore",
-    "dataset": {
-      "rows": 0,
-      "files": 0,
-      "size" : 0,
-      "collections": 0,
-      "infected": true
-    }
-  },
-  "service" : {
+  "service": {
+    "credentials": {
+      "noauth": true,
+      "username": "",
+      "password": "",
+      "key": "",
+      "raw": null
+    },
     "software": {
-      "name": "Elasticsearch",
-      "version": "1.4.4"
+      "name": "Apache",
+      "version": "2.2.4",
+      "os": "Ubuntu",
+      "modules": [
+        {
+          "name": "PHP",
+          "version": "4.4.2",
+          "fingerprint": "php-4-4-2"
+        }
+      ],
+      "fingerprint": "apache-2-2-4"
     }
   }
 }
