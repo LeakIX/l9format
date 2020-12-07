@@ -38,6 +38,7 @@ type L9LeakEvent struct {
 }
 
 type L9SSLEvent struct {
+	Detected bool `json:"detected"`
 	Enabled bool `json:"enabled"`
 	JARM string  `json:"jarm"`
 	CypherSuite string `json:"cypher_suite"`

@@ -29,6 +29,7 @@
   "summary": "Env config file found:\n\n XYZ=\n",
   "time": "0001-01-01T00:00:00Z",
   "ssl": {
+    "detected": true,
     "enabled": true,
     "jarm": "29d29d00029d29d21c41d41d00041dba71dd2df645850cf5f0b5af18a5fdcf",
     "cypher_suite": "TLS_AES_128_GCM_SHA256",
