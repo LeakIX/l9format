@@ -17,3 +17,8 @@ func (event *L9Event) HasSource(source string) bool {
 	}
 	return false
 }
+
+func (event *L9Event) AddSource(source string) {
+	event.EventPipeline = append(event.EventPipeline, source)
+	event.EventSource = source
+}
