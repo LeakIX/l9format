@@ -11,7 +11,7 @@
     "status": 200,
     "url": "/path1/.env",
     "length": 2004,
-    "headers": {
+    "header": {
       "Server": "Apache"
     }
   },
@@ -20,7 +20,7 @@
     "jarm": "05d10d20d21d20d05c05d10d05d20da23a7a927f270a23608b3c7a72999cab",
     "certificate" : {
       "cn": "*.example.com",
-      "domains" : ["*.example.net"]
+      "domain" : ["*.example.net"]
     }
   },
   "leak": {
