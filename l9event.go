@@ -25,6 +25,8 @@ type L9HttpEvent struct {
 	Status int `json:"status"`
 	Length int64 `json:"length"`
 	Headers map[string]string `json:"header"`
+	Title string `json:"title"`
+	FaviconHash string `json:"favicon_hash"`
 }
 
 type L9ServiceEvent struct {

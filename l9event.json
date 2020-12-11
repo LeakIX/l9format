@@ -24,7 +24,9 @@
     "header": {
       "Content-Type": "application/text",
       "Server": "Apache"
-    }
+    },
+    "title": "Apache welcome page",
+    "favicon_hash": "e7bc546316d2d0ec13a2d3117b13468f5e939f95"
   },
   "summary": "Env config file found:\n\n XYZ=\n",
   "time": "0001-01-01T00:00:00Z",
