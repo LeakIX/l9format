@@ -11,7 +11,6 @@ import (
 type ServicePluginInterface interface {
 	GetVersion() (int, int, int)
 	GetProtocols() []string
-	HasProtocol(protocol string) bool
 	GetName() string
 	GetType() string
 	Run(ctx context.Context, event *L9Event) (leak L9LeakEvent, hasLeak bool)
