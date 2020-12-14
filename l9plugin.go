@@ -2,9 +2,12 @@ package l9format
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"gitlab.nobody.run/tbi/socksme"
 	"net"
+	"net/http"
+	"strings"
 	"time"
 )
 
@@ -59,3 +62,24 @@ func  (plugin ServicePluginBase) DialContext(ctx context.Context, network string
 		DialContext(ctx,  "tcp", addr)
 }
 
+func (plugin ServicePluginBase) GetHttpClient(ctx context.Context, ip string, port string) *http.Client {
+	if strings.Contains(ip, ":") && !strings.Contains(ip,"["){
+		ip = fmt.Sprintf("[%s]", ip)
+	}
+	return &http.Client{
+		Transport: &http.Transport{
+			DialContext: func(_ context.Context,_ string, _ string) (net.Conn, error) {
+				addr := ip + ":" + port
+				return plugin.DialContext(ctx, "tcp", addr)
+			},
+			ResponseHeaderTimeout: 2 * time.Second,
+			ExpectContinueTimeout: 2 * time.Second,
+			DisableKeepAlives:     true,
+			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+		},
+		Timeout: 5 * time.Second,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+}
