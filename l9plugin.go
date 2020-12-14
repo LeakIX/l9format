@@ -18,16 +18,6 @@ type ServicePluginInterface interface {
 }
 
 type ServicePluginBase struct {
-	ServicePluginInterface
-}
-
-func (plugin ServicePluginBase) HasProtocol(proto string) bool {
-	for _, protoCheck := range plugin.GetProtocols() {
-		if proto == protoCheck {
-			return true
-		}
-	}
-	return false
 }
 
 func (plugin ServicePluginBase) GetL9NetworkConnection(event *L9Event) (conn net.Conn, err error) {
