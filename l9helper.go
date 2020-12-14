@@ -1,5 +1,16 @@
 package l9format
 
+
+func (event *L9Event) RemoveTransport(transportCheck string) {
+	transports := event.Transports
+	event.Transports = []string{}
+	for _, transport := range transports {
+		if transport != transportCheck {
+			event.Transports = append(event.Transports, transport)
+		}
+	}
+}
+
 func (event *L9Event) HasTransport(transport string) bool {
 	for _, check := range event.Transports {
 		if check == transport {
