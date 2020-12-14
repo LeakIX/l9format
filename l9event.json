@@ -74,6 +74,7 @@
     }
   },
   "leak": {
+    "stage": "open",
     "type": "configuration",
     "data": "Found .env file",
     "severity": "medium",
