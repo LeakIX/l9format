@@ -28,7 +28,7 @@
     "title": "Apache welcome page",
     "favicon_hash": "e7bc546316d2d0ec13a2d3117b13468f5e939f95"
   },
-  "summary": "Env config file found:\n\n XYZ=\n",
+  "summary": "GET /... qwerqwer",
   "time": "0001-01-01T00:00:00Z",
   "ssl": {
     "detected": true,
@@ -57,7 +57,7 @@
       "username": "",
       "password": "",
       "key": "",
-      "raw": null
+      "raw": "SSBhbSBhIGtleQo="
     },
     "software": {
       "name": "Apache",
@@ -74,11 +74,20 @@
     }
   },
   "leak": {
-    "severity": "",
+    "type": "configuration",
+    "data": "Found .env file",
+    "severity": "medium",
     "dataset": {
-      "rows": 0,
-      "files": 0,
-      "size": 0
+      "rows": 4,
+      "files": 1,
+      "size": 13223,
+      "collections": 1,
+      "infected": false,
+      "ransom_notes": [
+        "Do this",
+        "Don't do that",
+        "We love GDPR"
+      ]
     }
   }
 }
