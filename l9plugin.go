@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"gitlab.nobody.run/tbi/socksme"
+	"log"
 	"net"
 	"time"
 )
@@ -34,11 +35,16 @@ func (plugin ServicePluginBase) GetNetworkConnection(network string, addr string
 }
 
 func  (plugin ServicePluginBase) DialContext(ctx context.Context, network string, addr string) (conn net.Conn, err error) {
-	if true == true {
-		conn, err = net.DialTimeout(network,addr, 20*time.Second)
+	if ctx != nil {
+		deadline, hasDeadline := ctx.Deadline()
+		log.Println(deadline.Sub(time.Now()))
+		if hasDeadline {
+			conn, err = net.DialTimeout(network,addr, deadline.Sub(time.Now()))
+		} else {
+			conn, err = net.DialTimeout(network,addr, 3*time.Second)
+		}
 	} else {
-		deadline, _ := ctx.Deadline()
-		conn, err = net.DialTimeout(network,addr, deadline.Sub(time.Now()))
+		conn, err = net.DialTimeout(network,addr, 3*time.Second)
 	}
 	if tcpConn, isTcp := conn.(*net.TCPConn); isTcp {
 		// Will considerably lower TIME_WAIT connections and required fds,
