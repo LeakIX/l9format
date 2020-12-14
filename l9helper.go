@@ -1,6 +1,5 @@
 package l9format
 
-
 func (event *L9Event) RemoveTransport(transportCheck string) {
 	transports := event.Transports
 	event.Transports = []string{}
@@ -32,4 +31,13 @@ func (event *L9Event) HasSource(source string) bool {
 func (event *L9Event) AddSource(source string) {
 	event.EventPipeline = append(event.EventPipeline, source)
 	event.EventSource = source
+}
+
+func (event *L9Event) MatchServicePlugin(plugin ServicePluginInterface) bool {
+	for _, eventProtocol := range plugin.GetProtocols() {
+		if eventProtocol == event.Protocol {
+			return true
+		}
+	}
+	return false
 }
