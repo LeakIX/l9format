@@ -8,9 +8,6 @@ import (
 	"time"
 )
 
-const PLUGIN_STAGE_OPEN = "open"
-const PLUGIN_STAGE_EXPLORE = "explore"
-const PLUGIN_STAGE_EXFILTRATE = "exfiltrate"
 
 type ServicePluginInterface interface {
 	GetVersion() (int, int, int)
@@ -18,6 +15,7 @@ type ServicePluginInterface interface {
 	GetName() string
 	GetStage() string
 	GetType() string
+	GetSeverity() string
 	Run(ctx context.Context, event *L9Event) (leak L9LeakEvent, hasLeak bool)
 }
 

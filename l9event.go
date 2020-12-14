@@ -9,6 +9,11 @@ const SEVERITY_MEDIUM = "medium"
 const SEVERITY_LOW = "low"
 const SEVERITY_INFO = "info"
 
+const STAGE_OPEN = "open"
+const STAGE_EXPLORE = "explore"
+const STAGE_EXFILTRATE = "exfiltrate"
+
+
 type L9Event struct {
 	EventType   string `json:"event_type"`
 	EventSource      string `json:"event_source"`
@@ -42,6 +47,7 @@ type L9ServiceEvent struct {
 }
 
 type L9LeakEvent struct {
+	Stage string `json:"stage"`
 	Type string `json:"type"`
 	Data string `json:"data"`
 	Severity string `json:"severity"`
