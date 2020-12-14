@@ -34,8 +34,8 @@ func (plugin ServicePluginBase) GetNetworkConnection(network string, addr string
 }
 
 func  (plugin ServicePluginBase) DialContext(ctx context.Context, network string, addr string) (conn net.Conn, err error) {
-	if ctx == nil {
-		conn, err = net.DialTimeout(network,addr, 3*time.Second)
+	if true == true {
+		conn, err = net.DialTimeout(network,addr, 20*time.Second)
 	} else {
 		deadline, _ := ctx.Deadline()
 		conn, err = net.DialTimeout(network,addr, deadline.Sub(time.Now()))
