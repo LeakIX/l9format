@@ -2,6 +2,13 @@ package l9format
 
 import "time"
 
+
+const SEVERITY_CRITICAL = "critical"
+const SEVERITY_HIGH = "high"
+const SEVERITY_MEDIUM = "medium"
+const SEVERITY_LOW = "low"
+const SEVERITY_INFO = "info"
+
 type L9Event struct {
 	EventType   string `json:"event_type"`
 	EventSource      string `json:"event_source"`
@@ -36,7 +43,7 @@ type L9ServiceEvent struct {
 
 type L9LeakEvent struct {
 	Type string `json:"type"`
-	Summary string `json:"summary"`
+	Data string `json:"data"`
 	Severity string `json:"severity"`
 	Dataset DatasetSummary `json:"dataset"`
 }
