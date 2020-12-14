@@ -12,6 +12,7 @@ type ServicePluginInterface interface {
 	GetVersion() (int, int, int)
 	GetProtocols() []string
 	GetName() string
+	GetStage() string
 	GetType() string
 	Run(ctx context.Context, event *L9Event) (leak L9LeakEvent, hasLeak bool)
 }
