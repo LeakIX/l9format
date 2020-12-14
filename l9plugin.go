@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"gitlab.nobody.run/tbi/socksme"
-	"log"
 	"net"
 	"time"
 )
@@ -37,7 +36,6 @@ func (plugin ServicePluginBase) GetNetworkConnection(network string, addr string
 func  (plugin ServicePluginBase) DialContext(ctx context.Context, network string, addr string) (conn net.Conn, err error) {
 	if ctx != nil {
 		deadline, hasDeadline := ctx.Deadline()
-		log.Println(deadline.Sub(time.Now()))
 		if hasDeadline {
 			conn, err = net.DialTimeout(network,addr, deadline.Sub(time.Now()))
 		} else {
