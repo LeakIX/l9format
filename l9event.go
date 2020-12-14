@@ -35,6 +35,8 @@ type L9ServiceEvent struct {
 }
 
 type L9LeakEvent struct {
+	Type string `json:"type"`
+	Summary string `json:"summary"`
 	Severity string `json:"severity"`
 	Dataset DatasetSummary `json:"dataset"`
 }
@@ -52,6 +54,9 @@ type DatasetSummary struct {
 	Rows int64 `json:"rows"`
 	Files int64 `json:"files"`
 	Size int64  `json:"size"`
+	Collections int64 `json:"collections"`
+	Infected bool `json:"infected"`
+	RansomNotes []string `json:"ransom_notes"`
 }
 
 type Software struct {
