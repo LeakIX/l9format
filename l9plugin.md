@@ -17,6 +17,13 @@ func New() l9format.ServicePluginInterface {
 - Plugin must set `hasLeak` to true when a leak is found.
 - Plugin must set `leak` information before setting `hasLeak`
 
+## Building plugins
+
+```
+go build -trimpath -ldflags "-s -w" -o myplugin.so -buildmode=plugin
+```
+
+
 ## Example
 
 ```go
