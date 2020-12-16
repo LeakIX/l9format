@@ -13,7 +13,7 @@ func New() l9format.ServicePluginInterface {
 - Plugin should embed  `ServicePluginBase`
   - And use its network facility whenever possible
 - Plugin must respect the context it's provided as much as made possible by the driver
-- Plugin should update the *L9Event pointer if it finds more software information
+- Plugin should update the `*L9Event` pointer if it finds more software information
 - Plugin must set `hasLeak` to true when a leak is found.
 - Plugin must set `leak` information before setting `hasLeak`
 
