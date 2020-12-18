@@ -16,6 +16,7 @@ func New() l9format.ServicePluginInterface {
 - Plugin should update the `*L9Event` pointer if it finds more software information
 - Plugin must set `hasLeak` to true when a leak is found.
 - Plugin must set `leak` information before setting `hasLeak`
+- Plugin must assume `options` can be uninitialized and `nil`
 
 ## Building plugins
 
@@ -62,10 +63,11 @@ func (RedisOpenPlugin) GetStage() string {
 	return "open"
 }
 
-func (plugin RedisOpenPlugin) Run(ctx context.Context, event *l9format.L9Event) (leak l9format.L9LeakEvent, hasLeak bool) {
+func (plugin RedisOpenPlugin) Run(ctx context.Context, event *l9format.L9Event, options map[string]string) (leak l9format.L9LeakEvent, hasLeak bool) {
+	password, _ := options["password"]
 	client := redis.NewClient(&redis.Options{
 		Addr:     net.JoinHostPort(event.Ip, event.Port),
-		Password: "", // no password set
+		Password: password, // no password set
 		DB:       0,  // use default DB
 		Dialer:   plugin.DialContext,
 	})
