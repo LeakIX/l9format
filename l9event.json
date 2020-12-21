@@ -9,6 +9,7 @@
   ],
   "ip": "127.0.0.1",
   "host": "site1.example.com",
+  "reverse": "ptr1.example.com",
   "port": "8080",
   "transport": [
     "tcp",

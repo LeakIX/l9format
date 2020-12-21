@@ -18,6 +18,7 @@ type L9Event struct {
 	EventPipeline []string       `json:"event_pipeline"`
 	Ip            string         `json:"ip"`
 	Host          string         `json:"host"`
+	Reverse		  string		 `json:"reverse"`
 	Port          string         `json:"port"`
 	Transports    []string       `json:"transport"`
 	Protocol      string         `json:"protocol"`
