@@ -101,7 +101,7 @@ type WebPluginRequest struct {
 }
 
 type WebPluginResponse struct {
-	Response http.Response
+	Response *http.Response
 	Body  []byte
 	Document *goquery.Document
 }
