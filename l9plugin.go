@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"crypto/tls"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"gitlab.nobody.run/tbi/socksme"
 	"net"
 	"net/http"
@@ -89,7 +90,7 @@ type WebPluginInterface interface {
 	GetRequests() []WebPluginRequest
 	GetName() string
 	GetStage() string
-	Run(ctx context.Context, event *L9Event, options map[string]string) (leak L9LeakEvent, hasLeak bool)
+	Verify(request WebPluginRequest, response WebPluginResponse, event *L9Event, options map[string]string) (leak L9LeakEvent, hasLeak bool)
 }
 
 type WebPluginRequest struct {
@@ -97,6 +98,19 @@ type WebPluginRequest struct {
 	Path string
 	Headers map[string]string
 	Body    []byte
+}
+
+type WebPluginResponse struct {
+	Response http.Response
+	Body  []byte
+	Document *goquery.Document
+}
+
+func (resp *WebPluginResponse) GetHash() string {
+	h := md5.New()
+	h.Write([]byte(resp.Response.Status))
+	h.Write(resp.Body)
+	return string(h.Sum(nil))
 }
 
 func (request *WebPluginRequest) GetHash() string {
