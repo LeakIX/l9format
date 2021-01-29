@@ -1,5 +1,7 @@
 package l9format
 
+import "strings"
+
 func (event *L9Event) RemoveTransport(transportCheck string) {
 	transports := event.Transports
 	event.Transports = []string{}
@@ -40,4 +42,36 @@ func (event *L9Event) MatchServicePlugin(plugin ServicePluginInterface) bool {
 		}
 	}
 	return false
+}
+
+func (event *L9Event) Url() string {
+	var host string
+	var scheme string
+	var path string
+	host = event.Host
+	if len(host) < 1 {
+		host = event.Ip
+		if strings.Contains(event.Ip, ":") && !strings.Contains(event.Ip, "[") {
+			host = "[" + event.Ip + "]"
+		}
+	}
+	if event.HasTransport("http")  {
+		if event.HasTransport("tls") {
+			if event.Port != "443" {
+				host += ":" + event.Port
+			}
+			scheme = "https"
+		} else {
+			if event.Port != "80" {
+				host += ":" + event.Port
+			}
+			scheme = "http"
+		}
+	}
+	if len(event.Http.Url) > 1 {
+		path = event.Http.Url
+	} else if len(event.Http.Root) > 1 {
+		path = event.Http.Root
+	}
+	return scheme + "://" + host + path
 }
