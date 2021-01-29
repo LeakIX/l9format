@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"gitlab.nobody.run/tbi/socksme"
+	"hash/maphash"
 	"net"
 	"net/http"
 	"strings"
@@ -81,4 +82,34 @@ func (plugin ServicePluginBase) GetHttpClient(ctx context.Context, ip string, po
 			return http.ErrUseLastResponse
 		},
 	}
+}
+
+type WebPluginInterface interface {
+	GetVersion() (int, int, int)
+	GetRequests() []WebPluginRequest
+	GetName() string
+	GetStage() string
+	Run(ctx context.Context, event *L9Event, options map[string]string) (leak L9LeakEvent, hasLeak bool)
+}
+
+type WebPluginRequest struct {
+	Method string
+	Path string
+	Headers map[string]string
+	Body    []byte
+}
+
+func (request *WebPluginRequest) GetHash() uint64 {
+	var h maphash.Hash
+	h.WriteString(request.Method)
+	h.WriteString(request.Path)
+	for headerName, headerValue := range request.Headers {
+		h.WriteString(headerName + headerValue)
+	}
+	h.Write(request.Body)
+	return h.Sum64()
+}
+
+func (request *WebPluginRequest) Equal(testRequest WebPluginRequest) bool {
+	return request.GetHash() == testRequest.GetHash()
 }
