@@ -2,10 +2,10 @@ package l9format
 
 import (
 	"context"
+	"crypto/md5"
 	"crypto/tls"
 	"fmt"
 	"gitlab.nobody.run/tbi/socksme"
-	"hash/maphash"
 	"net"
 	"net/http"
 	"strings"
@@ -99,15 +99,15 @@ type WebPluginRequest struct {
 	Body    []byte
 }
 
-func (request *WebPluginRequest) GetHash() uint64 {
-	var h maphash.Hash
-	h.WriteString(request.Method)
-	h.WriteString(request.Path)
+func (request *WebPluginRequest) GetHash() string {
+	h := md5.New()
+	h.Write([]byte(request.Method))
+	h.Write([]byte(request.Path))
 	for headerName, headerValue := range request.Headers {
-		h.WriteString(headerName + headerValue)
+		h.Write([]byte(headerName + headerValue))
 	}
 	h.Write(request.Body)
-	return h.Sum64()
+	return string(h.Sum(nil))
 }
 
 func (request *WebPluginRequest) Equal(testRequest WebPluginRequest) bool {
