@@ -98,6 +98,7 @@ type WebPluginRequest struct {
 	Path string
 	Headers map[string]string
 	Body    []byte
+	hashCache string
 }
 
 type WebPluginResponse struct {
@@ -114,6 +115,9 @@ func (resp *WebPluginResponse) GetHash() string {
 }
 
 func (request *WebPluginRequest) GetHash() string {
+	if len(request.hashCache) > 0 {
+		return request.hashCache
+	}
 	h := md5.New()
 	h.Write([]byte(request.Method))
 	h.Write([]byte(request.Path))
@@ -121,7 +125,8 @@ func (request *WebPluginRequest) GetHash() string {
 		h.Write([]byte(headerName + headerValue))
 	}
 	h.Write(request.Body)
-	return string(h.Sum(nil))
+	request.hashCache = string(h.Sum(nil))
+	return request.hashCache
 }
 
 func (request *WebPluginRequest) Equal(testRequest WebPluginRequest) bool {
