@@ -2,8 +2,10 @@ package l9format
 
 import (
 	"context"
+	"crypto/md5"
 	"crypto/tls"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"gitlab.nobody.run/tbi/socksme"
 	"net"
 	"net/http"
@@ -81,4 +83,52 @@ func (plugin ServicePluginBase) GetHttpClient(ctx context.Context, ip string, po
 			return http.ErrUseLastResponse
 		},
 	}
+}
+
+type WebPluginInterface interface {
+	GetVersion() (int, int, int)
+	GetRequests() []WebPluginRequest
+	GetName() string
+	GetStage() string
+	Verify(request WebPluginRequest, response WebPluginResponse, event *L9Event, options map[string]string) (leak L9LeakEvent, hasLeak bool)
+}
+
+type WebPluginRequest struct {
+	Method string
+	Path string
+	Headers map[string]string
+	Body    []byte
+	hashCache string
+}
+
+type WebPluginResponse struct {
+	Response *http.Response
+	Body  []byte
+	Document *goquery.Document
+}
+
+func (resp *WebPluginResponse) GetHash() string {
+	h := md5.New()
+	h.Write([]byte(resp.Response.Status))
+	h.Write(resp.Body)
+	return string(h.Sum(nil))
+}
+
+func (request *WebPluginRequest) GetHash() string {
+	if len(request.hashCache) > 0 {
+		return request.hashCache
+	}
+	h := md5.New()
+	h.Write([]byte(request.Method))
+	h.Write([]byte(request.Path))
+	for headerName, headerValue := range request.Headers {
+		h.Write([]byte(headerName + headerValue))
+	}
+	h.Write(request.Body)
+	request.hashCache = string(h.Sum(nil))
+	return request.hashCache
+}
+
+func (request *WebPluginRequest) Equal(testRequest WebPluginRequest) bool {
+	return request.GetHash() == testRequest.GetHash()
 }
