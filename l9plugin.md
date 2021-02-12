@@ -2,7 +2,7 @@
 
 ## Implementation rules
 
-- Plugin must be a `struct` implementing `ServicePluginInterface`
+- Plugin must be a `struct` implementing either `ServicePluginInterface` or `WebPluginInterface`
 - Plugin must implement a New func :
 ```go 
 
