@@ -52,6 +52,12 @@
       "valid": false
     }
   },
+  "ssh": {
+    "fingerprint": "",
+    "version": 0,
+    "banner": "",
+    "motd": ""
+  },
   "service": {
     "credentials": {
       "noauth": true,
