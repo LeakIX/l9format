@@ -2,6 +2,21 @@ package l9format
 
 import "strings"
 
+func (event *L9Event) HasTag(tag string) bool {
+	for _, eventTag := range event.Tags {
+		if eventTag == tag {
+			return true
+		}
+	}
+	return false
+}
+
+func (event *L9Event) AddTag(tag string) {
+	if !event.HasTag(tag) {
+		event.Tags = append(event.Tags, tag)
+	}
+}
+
 func (event *L9Event) RemoveTransport(transportCheck string) {
 	transports := event.Transports
 	event.Transports = []string{}
