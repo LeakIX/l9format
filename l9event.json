@@ -91,5 +91,8 @@
         "We love GDPR"
       ]
     }
-  }
+  },
+  "tags": [
+    "plc"
+  ]
 }

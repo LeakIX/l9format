@@ -28,6 +28,7 @@ type L9Event struct {
 	SSL           L9SSLEvent     `json:"ssl"`
 	Service       L9ServiceEvent `json:"service"`
 	Leak          L9LeakEvent    `json:"leak"`
+	Tags          []string		 `json:"tags"`
 }
 
 type L9HttpEvent struct {
