@@ -26,6 +26,7 @@ type L9Event struct {
 	Summary       string         `json:"summary"`
 	Time          time.Time      `json:"time"`
 	SSL           L9SSLEvent     `json:"ssl"`
+	SSH           L9SSHEvent     `json:"ssh"`
 	Service       L9ServiceEvent `json:"service"`
 	Leak          L9LeakEvent    `json:"leak"`
 	Tags          []string		 `json:"tags"`
@@ -44,6 +45,13 @@ type L9HttpEvent struct {
 type L9ServiceEvent struct {
 	Credentials ServiceCredentials `json:"credentials"`
 	Software    Software           `json:"software"`
+}
+
+type L9SSHEvent struct {
+	Fingerprint string `json:"fingerprint"`
+	Version		int `json:"version"`
+	Banner      string `json:"banner"`
+	Motd		string `json:"motd"`
 }
 
 type L9LeakEvent struct {
