@@ -100,5 +100,22 @@
   },
   "tags": [
     "plc"
-  ]
+  ],
+  "geoip": {
+    "continent_name": "",
+    "region_iso_code": "",
+    "city_name": "",
+    "country_iso_code": "",
+    "country_name": "",
+    "region_name": "",
+    "location": {
+      "lat": 0,
+      "lon": 0
+    }
+  },
+  "network": {
+    "organization_name": "",
+    "asn": 0,
+    "network": ""
+  }
 }

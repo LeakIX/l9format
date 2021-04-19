@@ -30,6 +30,8 @@ type L9Event struct {
 	Service       L9ServiceEvent `json:"service"`
 	Leak          L9LeakEvent    `json:"leak"`
 	Tags          []string		 `json:"tags"`
+	GeoIp         GeoLocation    `json:"geoip"`
+	Network		  Network		 `json:"network"`
 }
 
 type L9HttpEvent struct {
@@ -111,4 +113,26 @@ type Certificate struct {
 	NotBefore   time.Time `json:"not_before"`
 	NotAfter    time.Time `json:"not_after"`
 	Valid       bool      `json:"valid"`
+}
+
+
+type GeoLocation struct {
+	ContinentName  string   `json:"continent_name"`
+	RegionISOCode  string   `json:"region_iso_code"`
+	CityName       string   `json:"city_name"`
+	CountryISOCode string   `json:"country_iso_code"`
+	CountryName    string   `json:"country_name"`
+	RegionName     string   `json:"region_name"`
+	GeoPoint       GeoPoint `json:"location"`
+}
+
+type GeoPoint struct {
+	Latitude  float64 `json:"lat"`
+	Longitude float64 `json:"lon"`
+}
+
+type Network struct {
+	OrganisationName string `json:"organization_name"`
+	ASN              int    `json:"asn"`
+	NetworkCIDR      string `json:"network"`
 }
