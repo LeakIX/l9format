@@ -18,7 +18,7 @@ type ServicePluginInterface interface {
 	GetProtocols() []string
 	GetName() string
 	GetStage() string
-	Run(ctx context.Context, event *L9Event, options map[string]string) (leak L9LeakEvent, hasLeak bool)
+	Run(ctx context.Context, event *L9Event, options map[string]string) (hasLeak bool)
 }
 
 type ServicePluginBase struct {
@@ -90,7 +90,7 @@ type WebPluginInterface interface {
 	GetRequests() []WebPluginRequest
 	GetName() string
 	GetStage() string
-	Verify(request WebPluginRequest, response WebPluginResponse, event *L9Event, options map[string]string) (leak L9LeakEvent, hasLeak bool)
+	Verify(request WebPluginRequest, response WebPluginResponse, event *L9Event, options map[string]string) (hasLeak bool)
 }
 
 type WebPluginRequest struct {

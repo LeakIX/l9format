@@ -59,7 +59,6 @@ type L9SSHEvent struct {
 type L9LeakEvent struct {
 	Stage    string         `json:"stage"`
 	Type     string         `json:"type"`
-	Data     string         `json:"data"`
 	Severity string         `json:"severity"`
 	Dataset  DatasetSummary `json:"dataset"`
 }
