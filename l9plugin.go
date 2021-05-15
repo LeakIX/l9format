@@ -94,16 +94,16 @@ type WebPluginInterface interface {
 }
 
 type WebPluginRequest struct {
-	Method string
-	Path string
-	Headers map[string]string
-	Body    []byte
+	Method    string
+	Path      string
+	Headers   map[string]string
+	Body      []byte
 	hashCache string
 }
 
 type WebPluginResponse struct {
 	Response *http.Response
-	Body  []byte
+	Body     []byte
 	Document *goquery.Document
 }
 

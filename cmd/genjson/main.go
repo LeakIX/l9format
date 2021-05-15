@@ -19,6 +19,10 @@ func main() {
 		panic(err)
 	}
 	encoder := json.NewEncoder(os.Stdout)
+	err = event.UpdateFingerprint()
+	if err != nil {
+		panic(err)
+	}
 	err = encoder.Encode(event)
 	if err != nil {
 		panic(err)

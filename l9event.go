@@ -13,25 +13,26 @@ const STAGE_EXPLORE = "explore"
 const STAGE_EXFILTRATE = "exfiltrate"
 
 type L9Event struct {
-	EventType     string         `json:"event_type"`
-	EventSource   string         `json:"event_source"`
-	EventPipeline []string       `json:"event_pipeline"`
-	Ip            string         `json:"ip"`
-	Host          string         `json:"host"`
-	Reverse		  string		 `json:"reverse"`
-	Port          string         `json:"port"`
-	Transports    []string       `json:"transport"`
-	Protocol      string         `json:"protocol"`
-	Http          L9HttpEvent    `json:"http"`
-	Summary       string         `json:"summary"`
-	Time          time.Time      `json:"time"`
-	SSL           L9SSLEvent     `json:"ssl"`
-	SSH           L9SSHEvent     `json:"ssh"`
-	Service       L9ServiceEvent `json:"service"`
-	Leak          L9LeakEvent    `json:"leak"`
-	Tags          []string		 `json:"tags"`
-	GeoIp         GeoLocation    `json:"geoip"`
-	Network		  Network		 `json:"network"`
+	EventType        string         `json:"event_type"`
+	EventSource      string         `json:"event_source"`
+	EventPipeline    []string       `json:"event_pipeline"`
+	EventFingerprint string         `json:"event_fingerprint"`
+	Ip               string         `json:"ip"`
+	Host             string         `json:"host"`
+	Reverse          string         `json:"reverse"`
+	Port             string         `json:"port"`
+	Transports       []string       `json:"transport"`
+	Protocol         string         `json:"protocol"`
+	Http             L9HttpEvent    `json:"http"`
+	Summary          string         `json:"summary"`
+	Time             time.Time      `json:"time"`
+	SSL              L9SSLEvent     `json:"ssl"`
+	SSH              L9SSHEvent     `json:"ssh"`
+	Service          L9ServiceEvent `json:"service"`
+	Leak             L9LeakEvent    `json:"leak"`
+	Tags             []string       `json:"tags"`
+	GeoIp            GeoLocation    `json:"geoip"`
+	Network          Network        `json:"network"`
 }
 
 type L9HttpEvent struct {
@@ -51,9 +52,9 @@ type L9ServiceEvent struct {
 
 type L9SSHEvent struct {
 	Fingerprint string `json:"fingerprint"`
-	Version		int `json:"version"`
+	Version     int    `json:"version"`
 	Banner      string `json:"banner"`
-	Motd		string `json:"motd"`
+	Motd        string `json:"motd"`
 }
 
 type L9LeakEvent struct {
@@ -113,7 +114,6 @@ type Certificate struct {
 	NotAfter    time.Time `json:"not_after"`
 	Valid       bool      `json:"valid"`
 }
-
 
 type GeoLocation struct {
 	ContinentName  string   `json:"continent_name"`

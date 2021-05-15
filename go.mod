@@ -1,6 +1,6 @@
 module github.com/LeakIX/l9format
 
-go 1.11
+go 1.15
 
 require (
 	github.com/PuerkitoBio/goquery v1.6.1

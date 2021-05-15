@@ -1,6 +1,29 @@
 package l9format
 
-import "strings"
+import (
+	"errors"
+	"fmt"
+	"hash/fnv"
+	"strings"
+)
+
+func (event *L9Event) UpdateFingerprint() error {
+	hasher := fnv.New128()
+	n, err := hasher.Write([]byte(event.EventType))
+	if err != nil || n != len(event.EventType) {
+		return errors.New("event hashing error")
+	}
+	n, err = hasher.Write([]byte(event.EventSource))
+	if err != nil || n != len(event.EventSource) {
+		return errors.New("event hashing error")
+	}
+	n, err = hasher.Write([]byte(event.Summary))
+	if err != nil || n != len(event.Summary) {
+		return errors.New("event hashing error")
+	}
+	event.EventFingerprint = fmt.Sprintf("%x", hasher.Sum([]byte{}))
+	return nil
+}
 
 func (event *L9Event) HasTag(tag string) bool {
 	for _, eventTag := range event.Tags {
@@ -70,7 +93,7 @@ func (event *L9Event) Url() string {
 			host = "[" + event.Ip + "]"
 		}
 	}
-	if event.HasTransport("http")  {
+	if event.HasTransport("http") {
 		if event.HasTransport("tls") {
 			if event.Port != "443" {
 				host += ":" + event.Port
