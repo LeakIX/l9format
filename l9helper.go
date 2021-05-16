@@ -23,7 +23,7 @@ func (event *L9Event) UpdateFingerprint() error {
 	}
 	for summaryScanner.Scan() {
 		n, err = hasher.Write(summaryScanner.Bytes())
-		if err != nil || n != len(event.Summary) {
+		if err != nil || n != len(summaryScanner.Bytes()) {
 			return errors.New("event hashing error")
 		}
 		summaryLines++
