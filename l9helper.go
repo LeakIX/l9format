@@ -1,6 +1,7 @@
 package l9format
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"hash/fnv"
@@ -9,6 +10,9 @@ import (
 
 func (event *L9Event) UpdateFingerprint() error {
 	hasher := fnv.New128()
+	summaryScanner := bufio.NewScanner(strings.NewReader(event.Summary))
+	summaryLines := 0
+	var preHash []byte
 	n, err := hasher.Write([]byte(event.EventType))
 	if err != nil || n != len(event.EventType) {
 		return errors.New("event hashing error")
@@ -17,11 +21,20 @@ func (event *L9Event) UpdateFingerprint() error {
 	if err != nil || n != len(event.EventSource) {
 		return errors.New("event hashing error")
 	}
-	n, err = hasher.Write([]byte(event.Summary))
-	if err != nil || n != len(event.Summary) {
-		return errors.New("event hashing error")
+	for summaryScanner.Scan() {
+		n, err = hasher.Write(summaryScanner.Bytes())
+		if err != nil || n != len(event.Summary) {
+			return errors.New("event hashing error")
+		}
+		summaryLines++
+		if summaryLines == 3 {
+			preHash = hasher.Sum([]byte{})
+		}
 	}
-	event.EventFingerprint = fmt.Sprintf("%x", hasher.Sum([]byte{}))
+	if len(preHash) != 128 {
+		preHash = hasher.Sum([]byte{})
+	}
+	event.EventFingerprint = fmt.Sprintf("%x", hasher.Sum(preHash))
 	return nil
 }
 
