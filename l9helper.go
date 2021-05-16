@@ -31,7 +31,7 @@ func (event *L9Event) UpdateFingerprint() error {
 			preHash = hasher.Sum([]byte{})
 		}
 	}
-	if len(preHash) != 128 {
+	if len(preHash) != 16 {
 		preHash = hasher.Sum([]byte{})
 	}
 	event.EventFingerprint = fmt.Sprintf("%x", hasher.Sum(preHash))
