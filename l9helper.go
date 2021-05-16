@@ -22,19 +22,30 @@ func (event *L9Event) UpdateFingerprint() error {
 		return errors.New("event hashing error")
 	}
 	for summaryScanner.Scan() {
+		// Avoid current date headers
+		if strings.HasPrefix("date:", strings.ToLower(summaryScanner.Text())) {
+			continue
+		}
 		n, err = hasher.Write(summaryScanner.Bytes())
 		if err != nil || n != len(summaryScanner.Bytes()) {
 			return errors.New("event hashing error")
 		}
 		summaryLines++
+		// Stop preHash after 3 lines
 		if summaryLines == 3 {
 			preHash = hasher.Sum([]byte{})
 		}
 	}
+	// if preHash empty ( > 3 lines in summary )
 	if len(preHash) != 16 {
+		//prehash*2 is fingerprint
 		preHash = hasher.Sum([]byte{})
+		preHash = append(preHash, preHash...)
+		event.EventFingerprint = fmt.Sprintf("%x", preHash)
+	} else {
+		//prehash+fullhash is fingerprint
+		event.EventFingerprint = fmt.Sprintf("%x", hasher.Sum(preHash))
 	}
-	event.EventFingerprint = fmt.Sprintf("%x", hasher.Sum(preHash))
 	return nil
 }
 
