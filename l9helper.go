@@ -9,10 +9,9 @@ import (
 )
 
 func (event *L9Event) UpdateFingerprint() error {
-	hasher := fnv.New128()
+	hasher := fnv.New32()
 	summaryScanner := bufio.NewScanner(strings.NewReader(event.Summary))
-	summaryLines := 0
-	var preHash []byte
+	var fullHash []byte
 	n, err := hasher.Write([]byte(event.EventType))
 	if err != nil || n != len(event.EventType) {
 		return errors.New("event hashing error")
@@ -21,31 +20,27 @@ func (event *L9Event) UpdateFingerprint() error {
 	if err != nil || n != len(event.EventSource) {
 		return errors.New("event hashing error")
 	}
+	fullHash = append(fullHash, hasher.Sum([]byte{})...)
 	for summaryScanner.Scan() {
-		// Avoid current date headers
-		if strings.HasPrefix("date:", strings.ToLower(summaryScanner.Text())) {
+		if strings.HasPrefix(strings.ToLower(summaryScanner.Text()), "date:") {
 			continue
 		}
 		n, err = hasher.Write(summaryScanner.Bytes())
-		if err != nil || n != len(summaryScanner.Bytes()) {
+		if err != nil || n != len(event.EventSource) {
 			return errors.New("event hashing error")
 		}
-		summaryLines++
-		// Stop preHash after 3 lines
-		if summaryLines == 3 {
-			preHash = hasher.Sum([]byte{})
+		fullHash = append(fullHash, hasher.Sum([]byte{})...)
+		if len(fullHash) >=16 {
+			break
 		}
 	}
-	// if preHash empty ( > 3 lines in summary )
-	if len(preHash) != 16 {
-		//prehash*2 is fingerprint
-		preHash = hasher.Sum([]byte{})
-		preHash = append(preHash, preHash...)
-		event.EventFingerprint = fmt.Sprintf("%x", preHash)
-	} else {
-		//prehash+fullhash is fingerprint
-		event.EventFingerprint = fmt.Sprintf("%x", hasher.Sum(preHash))
+	for len(fullHash) < 16 {
+		fullHash = append(fullHash, hasher.Sum([]byte{})...)
 	}
+	if len(fullHash) != 16 {
+		return errors.New("event hashing error, blame the author")
+	}
+	event.EventFingerprint = fmt.Sprintf("%x", fullHash)
 	return nil
 }
 
