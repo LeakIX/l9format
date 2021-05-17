@@ -21,6 +21,8 @@ type L9Event struct {
 	Host             string         `json:"host"`
 	Reverse          string         `json:"reverse"`
 	Port             string         `json:"port"`
+	Mac              string         `json:"mac"`
+	Vendor           string         `json:"vendor"`
 	Transports       []string       `json:"transport"`
 	Protocol         string         `json:"protocol"`
 	Http             L9HttpEvent    `json:"http"`
