@@ -8,20 +8,29 @@ import (
 	"strings"
 )
 
+var fingerPrintLength = 32
+
 func (event *L9Event) UpdateFingerprint() error {
 	hasher := fnv.New32()
 	summaryScanner := bufio.NewScanner(strings.NewReader(event.Summary))
 	var fullHash []byte
-	n, err := hasher.Write([]byte(event.EventType))
-	if err != nil || n != len(event.EventType) {
-		return errors.New("event hashing error")
-	}
-	n, err = hasher.Write([]byte(event.EventSource))
+	// Hash source
+	n, err := hasher.Write([]byte(event.EventSource))
 	if err != nil || n != len(event.EventSource) {
 		return errors.New("event hashing error")
 	}
 	fullHash = append(fullHash, hasher.Sum([]byte{})...)
+	// Hash 2 first bytes if any
+	if len(event.Summary) >= 2 {
+		n, err = hasher.Write([]byte(event.Summary[0:2]))
+		if err != nil || n != 2 {
+			return errors.New("event hashing error")
+		}
+		fullHash = append(fullHash, hasher.Sum([]byte{})...)
+	}
+	// Complete hash with each line
 	for summaryScanner.Scan() {
+		// Except date:
 		if strings.HasPrefix(strings.ToLower(summaryScanner.Text()), "date:") {
 			continue
 		}
@@ -30,14 +39,16 @@ func (event *L9Event) UpdateFingerprint() error {
 			return errors.New("event hashing error")
 		}
 		fullHash = append(fullHash, hasher.Sum([]byte{})...)
-		if len(fullHash) >=16 {
+		if len(fullHash) >= fingerPrintLength {
 			break
 		}
 	}
-	for len(fullHash) < 16 {
+	// Pad our hash if we're out of data
+	for len(fullHash) < fingerPrintLength {
 		fullHash = append(fullHash, hasher.Sum([]byte{})...)
 	}
-	if len(fullHash) != 16 {
+	// Final check
+	if len(fullHash) != fingerPrintLength {
 		return errors.New("event hashing error, blame the author")
 	}
 	event.EventFingerprint = fmt.Sprintf("%x", fullHash)
