@@ -7,11 +7,13 @@
     "l9explore",
     "DotEnvConfigPlugin"
   ],
-  "event_fingerprint": "ab2848eed8451d0ea0d48a691126d1ae",
+  "event_fingerprint": "ab2848eed8451d0ea0d48a691126d1aeab2848eed8451d0ea0d48a691126d1ae",
   "ip": "127.0.0.1",
   "host": "site1.example.com",
   "reverse": "ptr1.example.com",
   "port": "8080",
+  "mac": "",
+  "vendor": "",
   "transport": [
     "tcp",
     "tls",
