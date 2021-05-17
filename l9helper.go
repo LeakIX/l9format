@@ -26,7 +26,7 @@ func (event *L9Event) UpdateFingerprint() error {
 			continue
 		}
 		n, err = hasher.Write(summaryScanner.Bytes())
-		if err != nil || n != len(event.EventSource) {
+		if err != nil || n != len(summaryScanner.Bytes()) {
 			return errors.New("event hashing error")
 		}
 		fullHash = append(fullHash, hasher.Sum([]byte{})...)
