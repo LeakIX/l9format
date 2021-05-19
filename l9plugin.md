@@ -3,13 +3,6 @@
 ## Implementation rules
 
 - Plugin must be a `struct` implementing either `ServicePluginInterface` or `WebPluginInterface`
-- Plugin must implement a New func :
-```go 
-
-func New() l9format.ServicePluginInterface {
-	return MyPluginStruct{}
-}
-```
 - Plugin should embed  `ServicePluginBase`
   - And use its network facility whenever possible
 - Plugin must respect the context it's provided as much as made possible by the driver
@@ -18,17 +11,16 @@ func New() l9format.ServicePluginInterface {
 - Plugin must set `leak` information before setting `hasLeak`
 - Plugin must assume `options` can be uninitialized and `nil`
 
-## Building plugins
+## Creating/building plugins
 
-```
-go build -trimpath -ldflags "-s -w" -o myplugin.so -buildmode=plugin
-```
+Plugins are embeded in `l9explore`. Once you created a repository with your plugin, you can update l9explore's [plugin map](https://github.com/LeakIX/l9explore/blob/v1.0.0-beta.2/plugin_map.go) file and build a new version containing your plugin.
 
+The `--debug` flag can be used to confirm the plugins are loading properly.
 
 ## Example
 
 ```go
-package main
+package redis_open
 
 import (
 	"context"
@@ -41,10 +33,6 @@ import (
 
 type RedisOpenPlugin struct {
 	l9format.ServicePluginBase
-}
-
-func New() l9format.ServicePluginInterface {
-	return RedisOpenPlugin{}
 }
 
 func (RedisOpenPlugin) GetVersion() (int, int, int) {
