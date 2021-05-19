@@ -9,7 +9,8 @@ import (
 )
 
 var fingerPrintLength = 32
-
+var hashLength = 4 // fnv.New32
+var prefixLength = fingerPrintLength-hashLength
 func (event *L9Event) UpdateFingerprint() error {
 	hasher := fnv.New32()
 	summaryScanner := bufio.NewScanner(strings.NewReader(event.Summary))
@@ -39,14 +40,19 @@ func (event *L9Event) UpdateFingerprint() error {
 			return errors.New("event hashing error")
 		}
 		fullHash = append(fullHash, hasher.Sum([]byte{})...)
-		if len(fullHash) >= fingerPrintLength {
+		if len(fullHash) >= prefixLength {
 			break
 		}
 	}
 	// Pad our hash if we're out of data
-	for len(fullHash) < fingerPrintLength {
+	for len(fullHash) < prefixLength {
 		fullHash = append(fullHash, hasher.Sum([]byte{})...)
 	}
+	n, err = hasher.Write([]byte(event.Summary))
+	if err != nil || n != len(event.Summary) {
+		return errors.New("event hashing error")
+	}
+	fullHash = append(fullHash, hasher.Sum([]byte{})...)
 	// Final check
 	if len(fullHash) != fingerPrintLength {
 		return errors.New("event hashing error, blame the author")
