@@ -132,3 +132,12 @@ func (request *WebPluginRequest) GetHash() string {
 func (request *WebPluginRequest) Equal(testRequest WebPluginRequest) bool {
 	return request.GetHash() == testRequest.GetHash()
 }
+
+func (request *WebPluginRequest) EqualAny(testRequests []WebPluginRequest) bool {
+	for _, testRequest := range testRequests {
+		if request.GetHash() == testRequest.GetHash() {
+			return true
+		}
+	}
+	return false
+}
