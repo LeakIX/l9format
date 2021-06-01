@@ -13,7 +13,7 @@
 
 ## Creating/building plugins
 
-Plugins are embeded in `l9explore`. Once you created a repository with your plugin, you can update l9explore's [plugin map](https://github.com/LeakIX/l9explore/blob/v1.0.0-beta.2/plugin_map.go) file and build a new version containing your plugin.
+Plugins are embedded in `l9explore`. Once you created a repository with your plugin, you can update l9explore's [plugin map](https://github.com/LeakIX/l9explore/blob/v1.0.0-beta.2/plugin_map.go) file and build a new version containing your plugin.
 
 The `--debug` flag can be used to confirm the plugins are loading properly.
 
