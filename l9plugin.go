@@ -19,9 +19,14 @@ type ServicePluginInterface interface {
 	GetName() string
 	GetStage() string
 	Run(ctx context.Context, event *L9Event, options map[string]string) (hasLeak bool)
+	Init() error
 }
 
 type ServicePluginBase struct {
+}
+
+func (plugin ServicePluginBase) Init() error {
+	return nil
 }
 
 func (plugin ServicePluginBase) GetL9NetworkConnection(event *L9Event) (conn net.Conn, err error) {
