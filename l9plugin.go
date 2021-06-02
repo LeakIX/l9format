@@ -83,7 +83,7 @@ func (plugin ServicePluginBase) GetHttpClient(ctx context.Context, ip string, po
 			ResponseHeaderTimeout: 2 * time.Second,
 			ExpectContinueTimeout: 2 * time.Second,
 			DisableKeepAlives:     true,
-			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true,ClientSessionCache: tlsSessionCache},
+			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true,ClientSessionCache: TlsSessionCache},
 		},
 		Timeout: 5 * time.Second,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
