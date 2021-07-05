@@ -25,8 +25,6 @@ type ServicePluginInterface interface {
 type ServicePluginBase struct {
 }
 
-var TlsSessionCache = tls.NewLRUClientSessionCache(4096*1024)
-
 func (plugin ServicePluginBase) Init() error {
 	return nil
 }
@@ -83,7 +81,7 @@ func (plugin ServicePluginBase) GetHttpClient(ctx context.Context, ip string, po
 			ResponseHeaderTimeout: 2 * time.Second,
 			ExpectContinueTimeout: 2 * time.Second,
 			DisableKeepAlives:     true,
-			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true,ClientSessionCache: tlsSessionCache},
+			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 		},
 		Timeout: 5 * time.Second,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
