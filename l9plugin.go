@@ -157,6 +157,15 @@ func (request *WebPluginRequest) HasTag(tag string) bool {
 	return false
 }
 
+func (request *WebPluginRequest) HasAnyTags(tags []string) bool {
+	for _, tag := range tags {
+		if request.HasTag(tag) {
+			return true
+		}
+	}
+	return false
+}
+
 func (request *WebPluginRequest) AddTags(tags []string) {
 	for _, tag := range tags {
 		request.AddTag(tag)
