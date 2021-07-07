@@ -147,3 +147,25 @@ func (request *WebPluginRequest) EqualAny(testRequests []WebPluginRequest) bool 
 	}
 	return false
 }
+
+func (request *WebPluginRequest) HasTag(tag string) bool {
+	for _, eventTag := range request.Tags {
+		if eventTag == tag {
+			return true
+		}
+	}
+	return false
+}
+
+func (request *WebPluginRequest) AddTags(tags []string) {
+	for _, tag := range tags {
+		request.AddTag(tag)
+	}
+}
+
+
+func (request *WebPluginRequest) AddTag(tag string) {
+	if !request.HasTag(tag) {
+		request.Tags = append(request.Tags, tag)
+	}
+}
