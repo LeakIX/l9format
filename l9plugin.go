@@ -16,7 +16,6 @@ import (
 type ServicePluginInterface interface {
 	GetVersion() (int, int, int)
 	GetProtocols() []string
-	GetTags() []string
 	GetName() string
 	GetStage() string
 	Run(ctx context.Context, event *L9Event, options map[string]string) (hasLeak bool)
@@ -28,10 +27,6 @@ type ServicePluginBase struct {
 
 func (plugin ServicePluginBase) Init() error {
 	return nil
-}
-
-func (plugin ServicePluginBase) GetTags() (tags []string) {
-	return tags
 }
 
 func (plugin ServicePluginBase) GetL9NetworkConnection(event *L9Event) (conn net.Conn, err error) {
@@ -101,7 +96,6 @@ type WebPluginInterface interface {
 	GetName() string
 	GetStage() string
 	Verify(request WebPluginRequest, response WebPluginResponse, event *L9Event, options map[string]string) (hasLeak bool)
-	GetTags() []string
 }
 
 type WebPluginRequest struct {
