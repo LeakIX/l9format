@@ -104,6 +104,7 @@ type WebPluginRequest struct {
 	Headers   map[string]string
 	Body      []byte
 	hashCache string
+	Tags      []string
 }
 
 type WebPluginResponse struct {
