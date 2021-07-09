@@ -29,7 +29,8 @@ An external plugin example is the NucleiPlugin at https://github.com/gboddin/l9-
 
 The following is a redis example :
 
-```gopackage tcp
+```go
+package tcp
 
 import (
 	"context"
