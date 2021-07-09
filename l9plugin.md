@@ -3,24 +3,33 @@
 ## Implementation rules
 
 - Plugin must be a `struct` implementing either `ServicePluginInterface` or `WebPluginInterface`
+  - The `Init()` method is optional if extending `ServicePluginBase` 
 - Plugin should embed  `ServicePluginBase`
   - And use its network facility whenever possible
 - Plugin must respect the context it's provided as much as made possible by the driver
 - Plugin should update the `*L9Event` pointer if it finds more software information
-- Plugin must set `hasLeak` to true when a leak is found.
-- Plugin must set `leak` information before setting `hasLeak`
+- Plugin should update the `*L9Event.leak` struct with details about the leak
+- Plugin must set `hasLeak` to true when a leak is found
 - Plugin must assume `options` can be uninitialized and `nil`
+
 
 ## Creating/building plugins
 
-Plugins are embedded in `l9explore`. Once you created a repository with your plugin, you can update l9explore's [plugin map](https://github.com/LeakIX/l9explore/blob/v1.0.0-beta.2/plugin_map.go) file and build a new version containing your plugin.
+Plugins are embedded in `l9explore`. Once you created a repository with your plugin, you can update l9explore's [plugin map](https://github.com/LeakIX/l9explore/blob/master/plugin_map.go) file and build a new version containing your plugin.
 
 The `--debug` flag can be used to confirm the plugins are loading properly.
 
+*It might convenient to copy your plugin in l9explore source directory and work from there during initial development and debugging*
+
+Feel free to submit new plugins by PR to the l9explor repo, just update `plugin_map.go`, `go.mod`/`go.sum` and we'll review the addition!
+
 ## Example
 
-```go
-package redis_open
+An external plugin example is the NucleiPlugin at https://github.com/gboddin/l9-nuclei-plugin . 
+
+The following is a redis example :
+
+```gopackage tcp
 
 import (
 	"context"
@@ -51,11 +60,15 @@ func (RedisOpenPlugin) GetStage() string {
 	return "open"
 }
 
-func (plugin RedisOpenPlugin) Run(ctx context.Context, event *l9format.L9Event, options map[string]string) (leak l9format.L9LeakEvent, hasLeak bool) {
-	password, _ := options["password"]
+func (plugin RedisOpenPlugin) Init() error {
+        // Do things once when the plugin loads
+        return nil
+}
+
+func (plugin RedisOpenPlugin) Run(ctx context.Context, event *l9format.L9Event, options map[string]string) bool {
 	client := redis.NewClient(&redis.Options{
 		Addr:     net.JoinHostPort(event.Ip, event.Port),
-		Password: password, // no password set
+		Password: "", // no password set
 		DB:       0,  // use default DB
 		Dialer:   plugin.DialContext,
 	})
@@ -63,12 +76,12 @@ func (plugin RedisOpenPlugin) Run(ctx context.Context, event *l9format.L9Event, 
 	_, err := client.Ping(ctx).Result()
 	if err != nil {
 		log.Println("Redis PING failed, leaving early : ", err)
-		return leak, false
+		return  false
 	}
 	redisInfo, err := client.Info(ctx).Result()
 	if err != nil {
 		log.Println("Redis INFO failed, leaving early : ", err)
-		return leak, false
+		return false
 	}
 	redisInfoDict := make(map[string]string)
 	redisInfo = strings.Replace(redisInfo, "\r", "", -1)
@@ -82,13 +95,13 @@ func (plugin RedisOpenPlugin) Run(ctx context.Context, event *l9format.L9Event, 
 		event.Service.Software.OperatingSystem, _ = redisInfoDict["os"]
 		event.Service.Software.Name = "Redis"
 		event.Service.Software.Version, _ = redisInfoDict["redis_version"]
-		leak.Severity = l9format.SEVERITY_MEDIUM
-		leak.Data = "Redis is open\n"
-		leak.Type = "open_database"
-		leak.Dataset.Rows = 1
-		return leak, true
+		event.Leak.Severity = l9format.SEVERITY_MEDIUM
+		event.Summary = "Redis is open\n"
+		event.Leak.Type = "open_database"
+		event.Leak.Dataset.Rows = 1
+		return true
 	}
-	return leak, false
+	return false
 }
 ```
 
