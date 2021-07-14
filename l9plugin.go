@@ -13,6 +13,8 @@ import (
 	"time"
 )
 
+var TlsSessionCache = tls.NewLRUClientSessionCache(4096)
+
 type ServicePluginInterface interface {
 	GetVersion() (int, int, int)
 	GetProtocols() []string
@@ -81,7 +83,7 @@ func (plugin ServicePluginBase) GetHttpClient(ctx context.Context, ip string, po
 			ResponseHeaderTimeout: 2 * time.Second,
 			ExpectContinueTimeout: 2 * time.Second,
 			DisableKeepAlives:     true,
-			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig:       &tls.Config{InsecureSkipVerify: true, ClientSessionCache: TlsSessionCache},
 		},
 		Timeout: 5 * time.Second,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
