@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"gitlab.nobody.run/tbi/socksme"
 	"net"
 	"net/http"
 	"strings"
@@ -62,10 +61,6 @@ func (plugin ServicePluginBase) DialContext(ctx context.Context, network string,
 
 	}
 	return conn, err
-	// If you want to use a socks proxy ... Making network.go its own library soon.
-	//TODO : implement socks proxy support
-	return socksme.NewDialer("tcp", fmt.Sprintf("127.0.0.1:2250")).
-		DialContext(ctx, "tcp", addr)
 }
 
 func (plugin ServicePluginBase) GetHttpClient(ctx context.Context, ip string, port string) *http.Client {
