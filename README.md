@@ -10,3 +10,4 @@ This repository includes the Golang headers used as library in our components.
 
 Check `l9event.json` can be used to derive classes for your favorite language ( python, php ect)
 
+- [python](https://github.com/leakix/l9format-python)
