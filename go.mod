@@ -1,4 +1,4 @@
-module github.com/LeakIX/l9format
+module github.com/LeakIX/l9format/v2
 
 go 1.15
 
