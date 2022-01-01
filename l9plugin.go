@@ -13,20 +13,52 @@ import (
 )
 
 type ServicePluginInterface interface {
+	// GetVersion returns plugin version
 	GetVersion() (int, int, int)
+	// GetProtocols returns the protocol supported by the plugin
 	GetProtocols() []string
+	// GetName returns the plugin unique name
 	GetName() string
+	// GetStage returns the stage for the plugin :
+	// - open
+	// - explore
+	// - .... (custom stages)
 	GetStage() string
+	// Run runs the plugin against the remote service
 	Run(ctx context.Context, event *L9Event, options map[string]string) (hasLeak bool)
+	// Init called once when loading plugins : optional
 	Init() error
+	// IdentifyHttp Used to check tcpid payloads and identify the software : optional
+	IdentifyHttp(event *L9Event, body string, document *goquery.Document) bool
+	// IdentifyTcp Used to check tcpid payloads and identify the software : optional
+	IdentifyTcp(event *L9Event, bannerBytes []byte, bannerPrintables []string) bool
+	// GetReportTitle gets a descriptive title based on event for report title
+	GetReportTitle(event *L9Event) string
+	// GetReportDescription gets a description based on event for report description. Markdown supported
+	GetReportDescription(event *L9Event) string
 }
 
 type ServicePluginBase struct {
 }
 
+// Optional implementations with defaults :
+
 func (plugin ServicePluginBase) Init() error {
 	return nil
 }
+func (plugin ServicePluginBase) IdentifyHttp(_ *L9Event, _ string, _ *goquery.Document) bool {
+	return false
+}
+func (plugin ServicePluginBase) IdentifyTcp(_ *L9Event, _ []byte, _ []string) bool {
+	return false
+}
+func (plugin ServicePluginBase) GetReportTitle(event *L9Event) string {
+	return ""
+}
+func (plugin ServicePluginBase) GetReportDescription(event *L9Event) string {
+	return ""
+}
+
 
 func (plugin ServicePluginBase) GetL9NetworkConnection(event *L9Event) (conn net.Conn, err error) {
 	network := "tcp"
@@ -91,6 +123,12 @@ type WebPluginInterface interface {
 	GetName() string
 	GetStage() string
 	Verify(request WebPluginRequest, response WebPluginResponse, event *L9Event, options map[string]string) (hasLeak bool)
+	// IdentifyHttp Used to check tcpid payloads and identify the software : optional
+	IdentifyHttp(event *L9Event, body string, document *goquery.Document) bool
+	// GetReportTitle gets a descriptive title based on event for report title
+	GetReportTitle(event *L9Event) string
+	// GetReportDescription gets a description based on event for report description. Markdown supported
+	GetReportDescription(event *L9Event) string
 }
 
 type WebPluginRequest struct {
