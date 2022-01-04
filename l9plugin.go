@@ -19,13 +19,8 @@ type ServicePluginInterface interface {
 	GetProtocols() []string
 	// GetName returns the plugin unique name
 	GetName() string
-	// GetStage returns the stage for the plugin :
-	// - open
-	// - explore
-	// - .... (custom stages)
-	GetStage() string
 	// Run runs the plugin against the remote service
-	Run(ctx context.Context, event *L9Event, options map[string]string) (hasLeak bool)
+	Run(ctx context.Context, event L9Event, outputChannel chan L9Event,  options map[string]string)
 	// Init called once when loading plugins : optional
 	Init() error
 	// IdentifyHttp Used to check tcpid payloads and identify the software : optional
@@ -40,7 +35,6 @@ type ServicePluginInterface interface {
 
 type ServicePluginBase struct {
 }
-
 // Optional implementations with defaults :
 
 func (plugin ServicePluginBase) Init() error {
@@ -58,7 +52,6 @@ func (plugin ServicePluginBase) GetReportTitle(event *L9Event) string {
 func (plugin ServicePluginBase) GetReportDescription(event *L9Event) string {
 	return ""
 }
-
 
 func (plugin ServicePluginBase) GetL9NetworkConnection(event *L9Event) (conn net.Conn, err error) {
 	network := "tcp"
@@ -121,8 +114,7 @@ type WebPluginInterface interface {
 	GetVersion() (int, int, int)
 	GetRequests() []WebPluginRequest
 	GetName() string
-	GetStage() string
-	Verify(request WebPluginRequest, response WebPluginResponse, event *L9Event, options map[string]string) (hasLeak bool)
+	Run(request WebPluginRequest, response WebPluginResponse, event L9Event, outputChannel chan L9Event, options map[string]string)
 	// IdentifyHttp Used to check tcpid payloads and identify the software : optional
 	IdentifyHttp(event *L9Event, body string, document *goquery.Document) bool
 	// GetReportTitle gets a descriptive title based on event for report title
