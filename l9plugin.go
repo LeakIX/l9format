@@ -46,10 +46,10 @@ func (plugin ServicePluginBase) IdentifyHttp(_ *L9Event, _ string, _ *goquery.Do
 func (plugin ServicePluginBase) IdentifyTcp(_ *L9Event, _ []byte, _ []string) bool {
 	return false
 }
-func (plugin ServicePluginBase) GetReportTitle(event *L9Event) string {
+func (plugin ServicePluginBase) GetReportTitle(event L9Event) string {
 	return ""
 }
-func (plugin ServicePluginBase) GetReportDescription(event *L9Event) string {
+func (plugin ServicePluginBase) GetReportDescription(event L9Event) string {
 	return ""
 }
 
