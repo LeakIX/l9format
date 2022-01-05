@@ -20,7 +20,7 @@ type ServicePluginInterface interface {
 	// GetName returns the plugin unique name
 	GetName() string
 	// Run runs the plugin against the remote service
-	Run(ctx context.Context, event L9Event, outputChannel chan L9Event,  options map[string]string) (matched bool)
+	Run(ctx context.Context, event L9Event,  options map[string]string) []L9Event
 	// Init called once when loading plugins : optional
 	Init() error
 	// IdentifyHttp Used to check tcpid payloads and identify the software : optional
@@ -28,9 +28,9 @@ type ServicePluginInterface interface {
 	// IdentifyTcp Used to check tcpid payloads and identify the software : optional
 	IdentifyTcp(event *L9Event, bannerBytes []byte, bannerPrintables []string) bool
 	// GetReportTitle gets a descriptive title based on event for report title
-	GetReportTitle(event *L9Event) string
+	GetReportTitle(event L9Event) string
 	// GetReportDescription gets a description based on event for report description. Markdown supported
-	GetReportDescription(event *L9Event) string
+	GetReportDescription(event L9Event) string
 }
 
 type ServicePluginBase struct {
@@ -114,7 +114,7 @@ type WebPluginInterface interface {
 	GetVersion() (int, int, int)
 	GetRequests() []WebPluginRequest
 	GetName() string
-	TestReply(request WebPluginRequest, response WebPluginResponse, event L9Event, outputChannel chan L9Event, options map[string]string) (matched bool)
+	TestReply(request WebPluginRequest, response WebPluginResponse, event L9Event, options map[string]string) []L9Event
 	// IdentifyHttp Used to check tcpid payloads and identify the software : optional
 	IdentifyHttp(event *L9Event, body string, document *goquery.Document) bool
 	// GetReportTitle gets a descriptive title based on event for report title
