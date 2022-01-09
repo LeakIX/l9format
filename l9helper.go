@@ -10,7 +10,19 @@ import (
 
 var fingerPrintLength = 32
 var hashLength = 4 // fnv.New32
-var prefixLength = fingerPrintLength-hashLength
+var prefixLength = fingerPrintLength - hashLength
+
+var blacklistedHeaders = []string{"date:", "last-modified:", "etag:", "x-cache:", "x-amz", "via:", "expires:", "x-v-Cache:", "cf-ray:"}
+
+func UseLineForFringerprint(line string) bool {
+	for _, blacklistedHeader := range blacklistedHeaders {
+		if strings.HasPrefix(strings.ToLower(line), blacklistedHeader) {
+			return false
+		}
+	}
+	return true
+}
+
 func (event *L9Event) UpdateFingerprint() error {
 	hasher := fnv.New32()
 	summaryScanner := bufio.NewScanner(strings.NewReader(event.Summary))
@@ -31,28 +43,23 @@ func (event *L9Event) UpdateFingerprint() error {
 	}
 	// Complete hash with each line
 	for summaryScanner.Scan() {
-		// Except date:
-		if strings.HasPrefix(strings.ToLower(summaryScanner.Text()), "date:") {
+		if !UseLineForFringerprint(summaryScanner.Text()) {
 			continue
 		}
 		n, err = hasher.Write(summaryScanner.Bytes())
 		if err != nil || n != len(summaryScanner.Bytes()) {
 			return errors.New("event hashing error")
 		}
-		fullHash = append(fullHash, hasher.Sum([]byte{})...)
 		if len(fullHash) >= prefixLength {
-			break
+			continue
+		} else {
+			fullHash = append(fullHash, hasher.Sum([]byte{})...)
 		}
 	}
 	// Pad our hash if we're out of data
-	for len(fullHash) < prefixLength {
+	for len(fullHash) < fingerPrintLength {
 		fullHash = append(fullHash, hasher.Sum([]byte{})...)
 	}
-	n, err = hasher.Write([]byte(event.Summary))
-	if err != nil || n != len(event.Summary) {
-		return errors.New("event hashing error")
-	}
-	fullHash = append(fullHash, hasher.Sum([]byte{})...)
 	// Final check
 	if len(fullHash) != fingerPrintLength {
 		return errors.New("event hashing error, blame the author")
@@ -107,15 +114,6 @@ func (event *L9Event) HasSource(source string) bool {
 func (event *L9Event) AddSource(source string) {
 	event.EventPipeline = append(event.EventPipeline, source)
 	event.EventSource = source
-}
-
-func (event *L9Event) MatchServicePlugin(plugin ServicePluginInterface) bool {
-	for _, eventProtocol := range plugin.GetProtocols() {
-		if eventProtocol == event.Protocol {
-			return true
-		}
-	}
-	return false
 }
 
 func (event *L9Event) Url() string {
