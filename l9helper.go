@@ -8,9 +8,10 @@ import (
 	"strings"
 )
 
-var fingerPrintLength = 32
-var hashLength = 4 // fnv.New32
-var prefixLength = fingerPrintLength-hashLength
+const fingerPrintLength = 32
+const hashLength = 4 // fnv.New32
+const prefixLength = fingerPrintLength - hashLength
+
 func (event *L9Event) UpdateFingerprint() error {
 	hasher := fnv.New32()
 	summaryScanner := bufio.NewScanner(strings.NewReader(event.Summary))

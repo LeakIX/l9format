@@ -167,7 +167,6 @@ func (request *WebPluginRequest) AddTags(tags []string) {
 	}
 }
 
-
 func (request *WebPluginRequest) AddTag(tag string) {
 	if !request.HasTag(tag) {
 		request.Tags = append(request.Tags, tag)
