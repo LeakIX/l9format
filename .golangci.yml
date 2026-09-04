@@ -1,0 +1,36 @@
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  default: none
+  enable:
+    - govet
+    - ineffassign
+    - staticcheck
+    - gosec
+  settings:
+    staticcheck:
+      checks:
+        - all
+        - -ST1000
+        - -ST1003
+    # This library is a scanner SDK. Its helpers deliberately use
+    # InsecureSkipVerify (to probe targets regardless of certificate
+    # validity) and md5 (for fast, non-cryptographic dedup hashing of
+    # request/response content). These are not security controls; they
+    # are scanning primitives.
+    gosec:
+      excludes:
+        - G401 # md5 for dedup hashing
+        - G402 # InsecureSkipVerify for target probing
+        - G501 # crypto/md5 import
+
+formatters:
+  enable:
+    - gofmt
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
