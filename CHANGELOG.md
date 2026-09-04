@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
   permissions ([7ed9cc3])
 - Go directive bumped from 1.15 to 1.26, gofmt the codebase, and fix
   staticcheck findings ([a2ba36c])
+- Bumped `PuerkitoBio/goquery` from 1.6.1 to 1.13.0 ([21a782a])
 
 ## [1.3.1]
 
@@ -58,3 +59,4 @@ All notable changes to this project will be documented in this file.
 [a2ba36c]: https://github.com/LeakIX/l9format/commit/a2ba36c
 [c42abd1]: https://github.com/LeakIX/l9format/commit/c42abd1
 [7ed9cc3]: https://github.com/LeakIX/l9format/commit/7ed9cc3
+[21a782a]: https://github.com/LeakIX/l9format/commit/21a782a
