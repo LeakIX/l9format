@@ -34,18 +34,18 @@ func (plugin ServicePluginBase) GetL9NetworkConnection(event *L9Event) (conn net
 		network = "udp"
 	}
 	addr := net.JoinHostPort(event.Ip, event.Port)
-	return plugin.DialContext(nil, network, addr)
+	return plugin.DialContext(context.TODO(), network, addr)
 }
 
 func (plugin ServicePluginBase) GetNetworkConnection(network string, addr string) (conn net.Conn, err error) {
-	return plugin.DialContext(nil, network, addr)
+	return plugin.DialContext(context.TODO(), network, addr)
 }
 
 func (plugin ServicePluginBase) DialContext(ctx context.Context, network string, addr string) (conn net.Conn, err error) {
 	if ctx != nil {
 		deadline, hasDeadline := ctx.Deadline()
 		if hasDeadline {
-			conn, err = net.DialTimeout(network, addr, deadline.Sub(time.Now()))
+			conn, err = net.DialTimeout(network, addr, time.Until(deadline))
 		} else {
 			conn, err = net.DialTimeout(network, addr, 3*time.Second)
 		}
@@ -166,7 +166,6 @@ func (request *WebPluginRequest) AddTags(tags []string) {
 		request.AddTag(tag)
 	}
 }
-
 
 func (request *WebPluginRequest) AddTag(tag string) {
 	if !request.HasTag(tag) {
