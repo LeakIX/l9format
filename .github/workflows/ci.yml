@@ -1,0 +1,57 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/actions/checkout/blob/3d3c42e5aac5ba805825da76410c181273ba90b1/README.md#v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # The changelog check verifies that every commit referenced in
+          # CHANGELOG.md exists, which requires the full history.
+          fetch-depth: 0
+
+      # https://github.com/actions/setup-go/blob/b7ad1dad31e06c5925ef5d2fc7ad053ef454303e/README.md#v7.0.0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: gofmt
+        run: make check-format
+
+      - name: go vet
+        run: make vet
+
+      - name: test
+        run: make test
+
+      - name: govulncheck
+        run: make vuln
+
+      - name: golangci-lint
+        run: make lint
+
+      - name: changelog
+        run: make check-changelog
+
+      # https://github.com/zizmorcore/zizmor-action/blob/70fb788f84895a7701f5643d103d587e460b5c99/README.md
+      - name: zizmor
+        uses: zizmorcore/zizmor-action@70fb788f84895a7701f5643d103d587e460b5c99 # v0.6.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
